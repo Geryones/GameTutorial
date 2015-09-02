@@ -32,11 +32,13 @@ public class Core {
 
 
         RawModel model = OBJLoader.loadObjModel("model/dragon/dragon",loader);
-        ModelTexture texture = new ModelTexture(loader.loadTexture("drops"));
-        TexturedModel staticModel = new TexturedModel(model, texture);
+        TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("drops")));
+        ModelTexture texture =staticModel.getModelTexture();
+        texture.setShineDamper(10);
+        texture.setReflectivity(1);
 
-        Entity entity = new Entity(staticModel,new Vector3f(0,0,-25),0,0,0,1);
-        Light light = new Light(new Vector3f(0,0,-20),new Vector3f(1,1,1));
+        Entity entity = new Entity(staticModel,new Vector3f(0,-5,-25),0,0,0,1);
+        Light light = new Light(new Vector3f(200,200,100),new Vector3f(1,1,1));
 
         Camera camera= new Camera();
 
