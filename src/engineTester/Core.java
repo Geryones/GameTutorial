@@ -6,12 +6,10 @@ import entity.Light;
 import models.TexturedModel;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
-import renderEngine.DisplayManager;
-import renderEngine.Loader;
+import renderEngine.*;
 import models.RawModel;
-import renderEngine.OBJLoader;
-import renderEngine.Renderer;
 import shaders.StaticShader;
+import terrains.Terrain;
 import textures.ModelTexture;
 
 
@@ -26,35 +24,40 @@ public class Core {
         DisplayManager.createDisplay();
 
         Loader loader = new Loader();
+        MasterRenderer renderer = new MasterRenderer();
 
-        StaticShader shader= new StaticShader();
-        Renderer renderer = new Renderer(shader);
+
 
 
         RawModel model = OBJLoader.loadObjModel("model/dragon/dragon",loader);
-        TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("drops")));
+        TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("rainbow")));
         ModelTexture texture =staticModel.getModelTexture();
         texture.setShineDamper(10);
         texture.setReflectivity(1);
 
-        Entity entity = new Entity(staticModel,new Vector3f(0,-5,-25),0,0,0,1);
+        Entity dragonEntity = new Entity(staticModel,new Vector3f(0,-5,-25),0,0,0,1);
         Light light = new Light(new Vector3f(200,200,100),new Vector3f(1,1,1));
+
+        Terrain terrain= new Terrain(0,0,loader, new ModelTexture(loader.loadTexture("grass")));
+        Terrain terrain2= new Terrain(1,0,loader, new ModelTexture(loader.loadTexture("grass")));
 
         Camera camera= new Camera();
 
 
         while(!Display.isCloseRequested()){
-            entity.increaseRotation(0,1,0);
+
             camera.move();
-            renderer.prepare();
-            shader.start();
-            shader.loadLight(light);
-            shader.loadViewMatrix(camera);
-            renderer.render(entity,shader);
-            shader.stop();
+            renderer.processEntity(dragonEntity);
+            dragonEntity.increaseRotation(0, 1, 0);
+
+
+            renderer.processTerrain(terrain);
+            renderer.processTerrain(terrain2);
+
+            renderer.render(light,camera);
             DisplayManager.updtadeDisplay();
         }
-        shader.cleanUp();
+        renderer.cleanUp();
         loader.cleanUP();
         DisplayManager.closeDisplay();
     }
