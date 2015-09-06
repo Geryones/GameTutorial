@@ -1,8 +1,8 @@
 package renderEngine;
 
-import entity.Entity;
+
 import models.RawModel;
-import models.TexturedModel;
+
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
@@ -20,6 +20,7 @@ import java.util.List;
  * Created by Geryones on 06.09.2015.
  */
 public class TerrainRenderer {
+
     private TerrainShader shader;
 
     public TerrainRenderer(TerrainShader shader, Matrix4f projectionMatrix){
@@ -62,11 +63,7 @@ public class TerrainRenderer {
 
     private void loadModelMatrix(Terrain terrain){
         Matrix4f transformationMatrix= Maths.createTransformationMatrix(
-                new Vector3f(terrain.getX(),0,terrain.getZ()),
-                0,
-                0,
-                0,
-                1);
+                new Vector3f(terrain.getX(),0,terrain.getZ()),0,0,0,1);
         shader.loadTransformationMatrix(transformationMatrix);
     }
 }

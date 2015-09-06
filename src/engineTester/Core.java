@@ -24,25 +24,25 @@ public class Core {
         DisplayManager.createDisplay();
 
         Loader loader = new Loader();
-        MasterRenderer renderer = new MasterRenderer();
+
 
 
 
 
         RawModel model = OBJLoader.loadObjModel("model/dragon/dragon",loader);
-        TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("rainbow")));
+        TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("rainbow2")));
         ModelTexture texture =staticModel.getModelTexture();
         texture.setShineDamper(10);
         texture.setReflectivity(1);
 
-        Entity dragonEntity = new Entity(staticModel,new Vector3f(0,-5,-25),0,0,0,1);
-        Light light = new Light(new Vector3f(200,200,100),new Vector3f(1,1,1));
+        Entity dragonEntity = new Entity(staticModel,new Vector3f(0,0,-25),0,0,0,1);
+        Light light = new Light(new Vector3f(3000,2000,2000),new Vector3f(1,1,1));
 
-        Terrain terrain= new Terrain(0,0,loader, new ModelTexture(loader.loadTexture("grass")));
-        Terrain terrain2= new Terrain(1,0,loader, new ModelTexture(loader.loadTexture("grass")));
+        Terrain terrain= new Terrain(-1,-1,loader, new ModelTexture(loader.loadTexture("grass")));
+        Terrain terrain2= new Terrain(0,-1,loader, new ModelTexture(loader.loadTexture("grass")));
 
         Camera camera= new Camera();
-
+        MasterRenderer renderer = new MasterRenderer();
 
         while(!Display.isCloseRequested()){
 
