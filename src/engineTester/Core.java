@@ -58,11 +58,7 @@ public class Core {
 
             entities.add(new Entity(staticTree, new Vector3f(random.nextFloat() * 1600-800 , 0, random.nextFloat() *1600 -800), 0, 0, 0, 3));
 
-
-
             entities.add(new Entity(staticGrass, new Vector3f(random.nextFloat() * 1600-800, 0, random.nextFloat() *1600 -800), 0, 0, 0, 1));
-
-
 
             entities.add(new Entity(staticFern, new Vector3f(random.nextFloat() * 1600-800, 0, random.nextFloat() *1600 -800), 0, 0, 0, 0.6f));
         }
