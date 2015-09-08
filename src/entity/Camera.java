@@ -13,6 +13,7 @@ public class Camera {
     private float pitch;
     private float yaw;
     private float roll;
+    private static float CAMERASPEED = 1F;
 
     public Camera(){}
 
@@ -20,22 +21,22 @@ public class Camera {
 
     public void move(){
         if(Keyboard.isKeyDown(Keyboard.KEY_W)){
-            position.z-=0.3f;
+            position.z-=CAMERASPEED;
         }
         if(Keyboard.isKeyDown(Keyboard.KEY_D)){
-            position.x+=0.3f;
+            position.x+=CAMERASPEED;
         }
         if(Keyboard.isKeyDown(Keyboard.KEY_A)){
-            position.x-=0.3f;
+            position.x-=CAMERASPEED;
         }
         if(Keyboard.isKeyDown(Keyboard.KEY_S)){
-            position.z+=0.3f;
+            position.z+=CAMERASPEED;
         }
         if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)){
-            position.y+=0.3f;
+            position.y+=CAMERASPEED;
         }
         if(Keyboard.isKeyDown(Keyboard.KEY_C)){
-            position.y-=0.3f;
+            position.y-=CAMERASPEED;
         }
 
     }

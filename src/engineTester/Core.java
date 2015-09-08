@@ -13,6 +13,8 @@ import models.RawModel;
 import shaders.StaticShader;
 import terrains.Terrain;
 import textures.ModelTexture;
+import textures.TerrainTexture;
+import textures.TerrainTexturePack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,9 +32,16 @@ public class Core {
 
         Loader loader = new Loader();
 
+
+        //*************** Objekte in Welt***************
         ModelData dataTree = OBJFileLoader.loadOBJ("tree");
         RawModel treeModel = loader.loadToVAO(dataTree.getVertices(),dataTree.getTextureCoords(),dataTree.getNormals(),dataTree.getIndices());
         TexturedModel staticTree = new TexturedModel(treeModel, new ModelTexture(loader.loadTexture("tree2")));
+
+
+        ModelData dataTreeBig = OBJFileLoader.loadOBJ("lowPolyTree");
+        RawModel treeModelBig = loader.loadToVAO(dataTreeBig.getVertices(),dataTreeBig.getTextureCoords(),dataTreeBig.getNormals(),dataTreeBig.getIndices());
+        TexturedModel staticBigTree = new TexturedModel(treeModelBig, new ModelTexture(loader.loadTexture("tree2")));
 
 
 
@@ -61,19 +70,28 @@ public class Core {
             entities.add(new Entity(staticGrass, new Vector3f(random.nextFloat() * 1600-800, 0, random.nextFloat() *1600 -800), 0, 0, 0, 1));
 
             entities.add(new Entity(staticFern, new Vector3f(random.nextFloat() * 1600-800, 0, random.nextFloat() *1600 -800), 0, 0, 0, 0.6f));
+
+            entities.add(new Entity(staticBigTree, new Vector3f(random.nextFloat() * 1600-800, 0, random.nextFloat() *1600 -800), 0, 0, 0, 0.6f));
         }
 
-
-
-
-
-
+        //***************** Light Source*******************
         Light light = new Light(new Vector3f(3000,2000,2000),new Vector3f(1,1,1));
 
-        Terrain terrain= new Terrain(-1,-1,loader, new ModelTexture(loader.loadTexture("grass_flat")));
-        Terrain terrain2= new Terrain(0,-1,loader, new ModelTexture(loader.loadTexture("grass_flat")));
-        Terrain terrain3= new Terrain(-1,0,loader, new ModelTexture(loader.loadTexture("grass_flat")));
-        Terrain terrain4= new Terrain(0,0,loader, new ModelTexture(loader.loadTexture("grass_flat")));
+
+        // ******************Terrain Texture Stuff ****************
+
+        TerrainTexture backgroundTexture= new TerrainTexture(loader.loadTexture("grass_flat"));
+        TerrainTexture rTexture= new TerrainTexture(loader.loadTexture("dirt"));
+        TerrainTexture gTexture= new TerrainTexture(loader.loadTexture("flowerGrass"));
+        TerrainTexture bTexture= new TerrainTexture(loader.loadTexture("path"));
+
+        TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture,rTexture,gTexture,bTexture);
+        TerrainTexture blendMap= new TerrainTexture(loader.loadTexture("blendMap2"));
+
+        Terrain terrain= new Terrain(-1,-1,loader, texturePack,blendMap);
+        Terrain terrain2= new Terrain(0,-1,loader, texturePack,blendMap);
+        Terrain terrain3= new Terrain(-1,0,loader, texturePack,blendMap);
+        Terrain terrain4= new Terrain(0,0,loader,texturePack,blendMap);
 
 
         Camera camera= new Camera();
@@ -88,6 +106,7 @@ public class Core {
                 renderer.processEntity(grassX);
 
             }
+
 
 
             renderer.processTerrain(terrain);
