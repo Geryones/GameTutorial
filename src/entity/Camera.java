@@ -9,7 +9,7 @@ import org.lwjgl.util.vector.Vector3f;
  * Created by mai714 on 02.09.2015.
  */
 public class Camera {
-    private Vector3f position=new Vector3f(0,1,0);
+    private Vector3f position=new Vector3f(100,30,50);
     private float pitch;
     private float yaw;
     private float roll;
@@ -20,24 +20,7 @@ public class Camera {
 
 
     public void move(){
-        if(Keyboard.isKeyDown(Keyboard.KEY_W)){
-            position.z-=CAMERASPEED;
-        }
-        if(Keyboard.isKeyDown(Keyboard.KEY_D)){
-            position.x+=CAMERASPEED;
-        }
-        if(Keyboard.isKeyDown(Keyboard.KEY_A)){
-            position.x-=CAMERASPEED;
-        }
-        if(Keyboard.isKeyDown(Keyboard.KEY_S)){
-            position.z+=CAMERASPEED;
-        }
-        if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)){
-            position.y+=CAMERASPEED;
-        }
-        if(Keyboard.isKeyDown(Keyboard.KEY_C)){
-            position.y-=CAMERASPEED;
-        }
+
 
     }
 

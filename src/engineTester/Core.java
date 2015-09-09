@@ -3,6 +3,7 @@ package engineTester;
 import entity.Camera;
 import entity.Entity;
 import entity.Light;
+import entity.Player;
 import models.TexturedModel;
 import objConverter.ModelData;
 import objConverter.OBJFileLoader;
@@ -61,7 +62,7 @@ public class Core {
 
         List<Entity> entities = new ArrayList<Entity>();
         Random random = new Random();
-        for (int i = 0; i < 3000; i++){
+        for (int i = 0; i < 2000; i++){
 
             //TexturedModel model,    Vector3f position,     float rotX,    float rotY,   float rotZ,    float scale
 
@@ -76,6 +77,13 @@ public class Core {
 
         //***************** Light Source*******************
         Light light = new Light(new Vector3f(3000,2000,2000),new Vector3f(1,1,1));
+
+        //*****************Player******************
+        ModelData bunnyPlayer = OBJFileLoader.loadOBJ("person");
+        RawModel bunnyModel = loader.loadToVAO(bunnyPlayer.getVertices(),bunnyPlayer.getTextureCoords(),bunnyPlayer.getNormals(),bunnyPlayer.getIndices());
+        TexturedModel thePlayer=new TexturedModel(bunnyModel, new ModelTexture(loader.loadTexture("player")));
+
+        Player player = new Player(thePlayer,new Vector3f(100,0,-50),0,0,0,1);
 
 
         // ******************Terrain Texture Stuff ****************
@@ -100,6 +108,8 @@ public class Core {
         while(!Display.isCloseRequested()){
 
             camera.move();
+            player.move();
+            renderer.processEntity(player);
 
 
             for (Entity grassX : entities){
