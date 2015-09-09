@@ -102,7 +102,7 @@ public class Core {
         Terrain terrain4= new Terrain(0,0,loader,texturePack,blendMap);
 
 
-        Camera camera= new Camera();
+        Camera camera= new Camera(player);
         MasterRenderer renderer = new MasterRenderer();
 
         while(!Display.isCloseRequested()){
