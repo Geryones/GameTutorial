@@ -41,12 +41,16 @@ public class Core {
         TerrainTexture bTexture= new TerrainTexture(loader.loadTexture("path"));
 
         TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture,rTexture,gTexture,bTexture);
-        TerrainTexture blendMap= new TerrainTexture(loader.loadTexture("blendMap2"));
 
-        Terrain terrain= new Terrain(0,0,loader, texturePack,blendMap,"heightMap00");
-        Terrain terrain2= new Terrain(1,0,loader, texturePack,blendMap,"heightMap10");
-        Terrain terrain3= new Terrain(0,1,loader, texturePack,blendMap,"heightMap01");
-        Terrain terrain4= new Terrain(1,1,loader,texturePack,blendMap,"heightMap11");
+        TerrainTexture blendMap00= new TerrainTexture(loader.loadTexture("blendMap00"));
+        TerrainTexture blendMap10= new TerrainTexture(loader.loadTexture("blendMap10"));
+        TerrainTexture blendMap01= new TerrainTexture(loader.loadTexture("blendMap01"));
+        TerrainTexture blendMap11= new TerrainTexture(loader.loadTexture("blendMap11"));
+
+        Terrain terrain= new Terrain(0,0,loader, texturePack,blendMap00,"heightMap00");
+        Terrain terrain2= new Terrain(1,0,loader, texturePack,blendMap10,"heightMap10");
+        Terrain terrain3= new Terrain(0,1,loader, texturePack,blendMap01,"heightMap01");
+        Terrain terrain4= new Terrain(1,1,loader,texturePack,blendMap11,"heightMap11");
 
 
         Terrain[][] terrains = new Terrain[2][2];
