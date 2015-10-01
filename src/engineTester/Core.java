@@ -4,10 +4,13 @@ import entity.Camera;
 import entity.Entity;
 import entity.Light;
 import entity.Player;
+import guis.GuiRenderer;
+import guis.GuiTexture;
 import models.TexturedModel;
 import objConverter.ModelData;
 import objConverter.OBJFileLoader;
 import org.lwjgl.opengl.Display;
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 import renderEngine.*;
 import models.RawModel;
@@ -32,6 +35,14 @@ public class Core {
         DisplayManager.createDisplay();
 
         Loader loader = new Loader();
+
+
+        //************GUI stuff *****************************
+        List<GuiTexture> guis = new ArrayList<GuiTexture>();
+        GuiTexture gui= new GuiTexture(loader.loadTexture("life"),new Vector2f(-0.7f,-0.9f),new Vector2f(0.25f,0.25f));
+        guis. add(gui);
+
+        GuiRenderer guiRenderer = new GuiRenderer(loader);
 
         // ******************Terrain Texture Stuff ****************
 
@@ -76,8 +87,9 @@ public class Core {
 
         ModelData dataFern = OBJFileLoader.loadOBJ("fern");
         RawModel modelFern = loader.loadToVAO(dataFern.getVertices(),dataFern.getTextureCoords(),dataFern.getNormals(),dataFern.getIndices());
-        TexturedModel staticFern= new TexturedModel(modelFern,new ModelTexture(loader.loadTexture("fern_old")));
+        TexturedModel staticFern= new TexturedModel(modelFern,new ModelTexture(loader.loadTexture("fernAtlas")));
         staticFern.getModelTexture().setHasTransparency(true);
+        staticFern.getModelTexture().setNumberOfRows(2);
 
 
         ModelData dataGrass = OBJFileLoader.loadOBJ("grassModel");
@@ -92,6 +104,10 @@ public class Core {
         TexturedModel staticFlower= new TexturedModel(modelFlower,new ModelTexture(loader.loadTexture("flower")));
         staticFlower.getModelTexture().setHasTransparency(true);
         staticFlower.getModelTexture().setUseFakeLighting(true);
+
+        ModelData dataLamp= OBJFileLoader.loadOBJ("lamp");
+        RawModel modelLamp= loader.loadToVAO(dataLamp.getVertices(), dataLamp.getTextureCoords(),dataLamp.getNormals(),dataLamp.getIndices());
+        TexturedModel lamp= new TexturedModel(modelLamp, new ModelTexture(loader.loadTexture("lamp")));
 
 
 
@@ -149,7 +165,7 @@ public class Core {
                 Terrain currentTerrain = terrains[gridXModels][gridZModels];
                 float y = currentTerrain.getHeightOfTerrain(x,z);
 
-                entities.add(new Entity(staticFern, new Vector3f(x,y,z),0,random.nextFloat()*360,0,1));
+                entities.add(new Entity(staticFern,random.nextInt(4), new Vector3f(x,y,z),0,random.nextFloat()*360,0,1));
             }
 
 
@@ -158,21 +174,34 @@ public class Core {
         }
 
         //***************** Light Source*******************
-        Light light = new Light(new Vector3f(3000,2000,2000),new Vector3f(1,1,1));
+
+        List<Light> lights= new ArrayList<Light>();
+
+        lights.add(new Light(new Vector3f(0,10000,-7000),new Vector3f(0.2f,0.2f,0.2f)));
+        lights.add(new Light(new Vector3f(185,25,793),new Vector3f(2,0,0),new Vector3f(1,0.1f,0.002f)));
+        lights.add(new Light(new Vector3f(370,25,800),new Vector3f(0,2,2),new Vector3f(1,0.1f,0.002f)));
+        lights.add(new Light(new Vector3f(293,25,805),new Vector3f(2,2,0),new Vector3f(1,0.1f,0.002f)));
+
+        //******** lampen ( sind eig entitys*******
+
+
+        entities.add(new Entity(lamp,new Vector3f(185,10,793),0,0,0,1));
+        entities.add(new Entity(lamp,new Vector3f(370,17,800),0,0,0,1));
+        entities.add(new Entity(lamp,new Vector3f(293,7,805),0,0,0,1));
 
         //*****************Player******************
         ModelData bunnyPlayer = OBJFileLoader.loadOBJ("person");
         RawModel bunnyModel = loader.loadToVAO(bunnyPlayer.getVertices(),bunnyPlayer.getTextureCoords(),bunnyPlayer.getNormals(),bunnyPlayer.getIndices());
         TexturedModel thePlayer=new TexturedModel(bunnyModel, new ModelTexture(loader.loadTexture("player")));
 
-        Player player = new Player(thePlayer,new Vector3f(800,0,800),0,0,0,0.5f);
+        Player player = new Player(thePlayer,new Vector3f(300,0,800),0,0,0,0.5f);
 
 
 
 
 
         Camera camera= new Camera(player);
-        MasterRenderer renderer = new MasterRenderer();
+        MasterRenderer renderer = new MasterRenderer(loader);
 
         while(!Display.isCloseRequested()){
 
@@ -197,9 +226,13 @@ public class Core {
             renderer.processTerrain(terrain3);
             renderer.processTerrain(terrain4);
 
-            renderer.render(light,camera);
+            renderer.render(lights,camera);
+
+            guiRenderer.render(guis);
+
             DisplayManager.updtadeDisplay();
         }
+        guiRenderer.cleanUP();
         renderer.cleanUp();
         loader.cleanUP();
         DisplayManager.closeDisplay();

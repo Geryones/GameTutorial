@@ -9,6 +9,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;
 import shaders.StaticShader;
 import shaders.TerrainShader;
+import skybox.SkyboxRenderer;
 import terrains.Terrain;
 
 import java.util.ArrayList;
@@ -25,9 +26,9 @@ public class MasterRenderer {
     private static final float NEAR_PLANE=0.1f;
     private static final float FAR_PLANE=1000f;
 
-    private static final float RED=0.8f;
-    private static final float GREEN=0.3f;
-    private static final float BLUE=0.3f;
+    private static final float RED=0.5444f;
+    private static final float GREEN=0.62f;
+    private static final float BLUE=0.69f;
 
     private Matrix4f projectionMatrix;
 
@@ -41,12 +42,15 @@ public class MasterRenderer {
     private TerrainRenderer terrainRenderer;
     private TerrainShader terrainShader = new TerrainShader();
 
+    private SkyboxRenderer skyboxRenderer;
 
-    public MasterRenderer(){
+
+    public MasterRenderer(Loader loader){
         enableCulling();
         createProjectionMatrix();
         renderer=new EntityRenderer(shader, projectionMatrix);
         terrainRenderer = new TerrainRenderer(terrainShader,projectionMatrix);
+        skyboxRenderer= new SkyboxRenderer(loader, projectionMatrix);
     }
 
     public static void enableCulling(){
@@ -60,20 +64,22 @@ public class MasterRenderer {
     }
 
 
-    public void render(Light sun, Camera camera){
+    public void render(List<Light> lights, Camera camera){
         prepare();
         shader.start();
         shader.loadSkyColour(RED,GREEN,BLUE);
-        shader.loadLight(sun);
+        shader.loadLights(lights);
         shader.loadViewMatrix(camera);
         renderer.render(entities);
         shader.stop();
         terrainShader.start();
         terrainShader.loadSkyColour(RED,GREEN,BLUE);
-        terrainShader.loadLight(sun);
+        terrainShader.loadLights(lights);
         terrainShader.loadViewMatrix(camera);
         terrainRenderer.render(terrains);
         terrainShader.stop();
+
+        skyboxRenderer.render(camera);
 
         terrains.clear();
         entities.clear();

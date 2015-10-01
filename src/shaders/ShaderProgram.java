@@ -4,6 +4,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.io.BufferedReader;
@@ -14,7 +15,7 @@ import java.nio.FloatBuffer;
 /**
  * Created by mai714 on 02.09.2015.
  */
-public abstract class ShaderProgramm {
+public abstract class ShaderProgram {
 
     private int programID;
     private int vertexShaderID;
@@ -22,7 +23,7 @@ public abstract class ShaderProgramm {
 
     private static FloatBuffer matrixBuffer= BufferUtils.createFloatBuffer(16);
 
-    public ShaderProgramm(String vertexFile, String fragmentFile){
+    public ShaderProgram(String vertexFile, String fragmentFile){
         vertexShaderID=loadShader(vertexFile,GL20.GL_VERTEX_SHADER);
         fragmentShaderID=loadShader(fragmentFile,GL20.GL_FRAGMENT_SHADER);
 
@@ -72,6 +73,11 @@ public abstract class ShaderProgramm {
         GL20.glUniform3f(location,vector.x,vector.y,vector.z);
     }
 
+    protected void loadVector(int location, Vector2f vector){
+
+        GL20.glUniform2f(location,vector.x,vector.y);
+    }
+
     protected void loadBoolean(int location, boolean value){
         float toLoad=0;
         if(value){
@@ -110,7 +116,7 @@ public abstract class ShaderProgramm {
         GL20.glCompileShader(shaderID);
         if (GL20.glGetShaderi(shaderID,GL20.GL_COMPILE_STATUS)== GL11.GL_FALSE){
             System.out.println(GL20.glGetShaderInfoLog(shaderID,500));
-            System.err.println("Could not compile shaders");
+            System.err.println("Could not compile shaders @ ShaderProgram");
             System.exit(-1);
         }
         return shaderID;
